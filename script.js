@@ -5,49 +5,56 @@ let firstNumber = 0;
 let secondNumber = 0;
 
 let result;
+let previousOption = undefined;
 let option = false;
+let choosingOperation = false;
 
 const handleClickedNumber = (e) => {
-        let pressedNumber = e.target.value;
-        if (!option) {
-        firstNumber =parseFloat(firstNumber.toString() + pressedNumber.toString());
-        console.log(firstNumber);
-        resultWindow.value = firstNumber;
-        } else {
-            secondNumber = parseFloat(secondNumber.toString() + pressedNumber.toString());
-            resultWindow.value = secondNumber;
-        }
-}
+    choosingOperation = false;
+  if (option === '=') {
+    firstNumber = 0;
+    previousOption = undefined;
+  }
+  let pressedNumber = e.target.value;
+  secondNumber = parseFloat(secondNumber.toString() + pressedNumber.toString());
+  resultWindow.value = secondNumber;
+};
 
 const handleClickedOption = (e) => {
-        option = e.target.value;
-        console.log(option)
-}
+  option = e.target.value;
+  handleEquals(previousOption);
+};
 
 const handleEquals = (e) => {
-        console.log('wynik');
-        switch (option){
-            case '+':
-                console.log('sumujemy');
-                result = firstNumber+secondNumber;
-                break;
-            case '-':
-                console.log('odejmujemy');
-                result = firstNumber-secondNumber;
-                break;
-            case 'x':
-                console.log('mnozymy');
-                result = firstNumber*secondNumber;
-                break;
-        }
-        resultWindow.value = result;
-}
+  switch (previousOption) {
+    case '+':
+      firstNumber = firstNumber + secondNumber;
+      secondNumber = 0;
+      break;
+    case '-':
+      console.log('odejmujemy');
+      firstNumber = firstNumber - secondNumber;
+      secondNumber = 0;
+      break;
+    case 'x':
+      firstNumber = firstNumber * secondNumber;
+      secondNumber = 0;
+      break;
+    case undefined:
+      firstNumber = secondNumber;
+      secondNumber = 0;
+      break;
+  }
+  resultWindow.value = firstNumber;
+  previousOption = option;
+};
 
+const handleClick = (e) => {
+  if (e.target.nodeName === 'BUTTON' && e.target.classList.contains('number'))
+    handleClickedNumber(e);
+  if (e.target.nodeName === 'BUTTON' && e.target.classList.contains('option'))
+    handleClickedOption(e);
+    console.log('firstNumber', firstNumber, 'secondNumber', secondNumber)
+};
 
-const handleClick = (e)=>{
-    if(e.target.nodeName === "BUTTON" && e.target.classList.contains('number')) handleClickedNumber(e);
-    if(e.target.nodeName === "BUTTON" && e.target.classList.contains('option')) handleClickedOption(e);
-    if (e.target.nodeName === "BUTTON" && e.target.classList.contains('equals')) handleEquals(e);
-}
-
-calculator.addEventListener("click", handleClick)
+calculator.addEventListener('click', handleClick);
