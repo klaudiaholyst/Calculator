@@ -1,58 +1,61 @@
-const calculator = document.getElementById('calculator');
-const resultWindow = document.getElementById('result');
+const resultWindow = document.getElementById("result");
 
 let firstNumber = 0;
 let secondNumber = 0;
-let previousOption = undefined;
-let option = false;
-let numberClicked=false;
+let firstOption = '=';
+let secondOption = false;
+let choosingOption = false;
+
+const handleStartingPoint = () => {
+  firstNumber = 0;
+  firstOption = '=';
+  secondOption = false;
+};
 
 const handleClickedNumber = (e) => {
-    numberClicked = true;
-  if (option === '=') {
-    firstNumber = 0;
-    previousOption = undefined;
-  }
-  let pressedNumber = e.target.value;
-  secondNumber = parseFloat(secondNumber.toString() + pressedNumber.toString());
+  if (secondOption === "=") handleStartingPoint();
+  choosingOption = false;
+  const pressedNumber = e.target.value;
+  secondNumber = parseInt(secondNumber + pressedNumber);
   resultWindow.value = secondNumber;
 };
 
 const handleClickedOption = (e) => {
-  option = e.target.value;
-  handleEquals(previousOption);
+  secondOption = e.target.value;
+  if (choosingOption) {
+    firstOption = secondOption;
+  } else {
+    handleOperation();
+  }
 };
 
-const handleEquals = (e) => {
-  switch (previousOption) {
-    case '+':
+const handleOperation = () => {
+  switch (firstOption) {
+    case "+":
       firstNumber = firstNumber + secondNumber;
-      secondNumber = 0;
       break;
-    case '-':
-      console.log('odejmujemy');
+    case "-":
       firstNumber = firstNumber - secondNumber;
-      secondNumber = 0;
       break;
-    case 'x':
+    case "x":
       firstNumber = firstNumber * secondNumber;
-      secondNumber = 0;
       break;
-    case undefined:
+    case "=":
       firstNumber = secondNumber;
-      secondNumber = 0;
       break;
   }
   resultWindow.value = firstNumber;
-  previousOption = option;
+  secondNumber = 0;
+  firstOption = secondOption;
+  choosingOption = true;
 };
 
 const handleClick = (e) => {
-  if (e.target.nodeName === 'BUTTON' && e.target.classList.contains('number'))
-    handleClickedNumber(e);
-  if (e.target.nodeName === 'BUTTON' && e.target.classList.contains('option'))
-    handleClickedOption(e);
-    console.log('firstNumber', firstNumber, 'secondNumber', secondNumber)
+  if (e.target.nodeName === "BUTTON") {
+    const classList = e.target.classList;
+    if (classList.contains("number")) handleClickedNumber(e);
+    if (classList.contains("option")) handleClickedOption(e);
+  }
 };
 
-calculator.addEventListener('click', handleClick);
+document.getElementById("calculator").addEventListener("click", handleClick);
