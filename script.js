@@ -3,14 +3,12 @@ const resultWindow = document.getElementById('result');
 
 let firstNumber = 0;
 let secondNumber = 0;
-
-let result;
 let previousOption = undefined;
 let option = false;
-let choosingOperation = false;
+let numberClicked=false;
 
 const handleClickedNumber = (e) => {
-    choosingOperation = false;
+    numberClicked = true;
   if (option === '=') {
     firstNumber = 0;
     previousOption = undefined;
